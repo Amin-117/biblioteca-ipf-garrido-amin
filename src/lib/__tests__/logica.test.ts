@@ -3,7 +3,7 @@ import type { Libro, Prestamo } from '../../types';
 import { mapearPermiso } from '../permisos';
 import { calcularDisponibles, crearPrestamo } from '../prestamos';
 import { ultimosVistos } from '../recientes';
-import { esIsbnValido, normalizarParametro } from '../validaciones';
+import { esEstadoGuardado, esIsbnValido, normalizarParametro } from '../validaciones';
 
 const libro: Libro = {
   isbn: '9788499089515',
@@ -85,5 +85,25 @@ describe('ultimosVistos', () => {
     const pila = Pila.desde(['a', 'b', 'c', 'a', 'd']);
     expect(ultimosVistos(pila, 3)).toEqual(['d', 'a', 'c']);
     expect(ultimosVistos(new Pila<string>(), 3)).toEqual([]);
+  });
+});
+
+describe('esEstadoGuardado', () => {
+  const valido = {
+    prestamos: [crearPrestamo(libro.isbn, 'estante', new Date(2026, 0, 1))],
+    listasEspera: { [libro.isbn]: ['Ana'] },
+    recientes: [libro.isbn],
+    avisos: [{ id: '1', texto: 'Hola', fecha: '2026-01-01T00:00:00.000Z' }],
+  };
+
+  it('acepta un estado con la forma esperada', () => {
+    expect(esEstadoGuardado(valido)).toBe(true);
+  });
+
+  it('rechaza datos con otra forma sin lanzar errores', () => {
+    expect(esEstadoGuardado(null)).toBe(false);
+    expect(esEstadoGuardado('texto')).toBe(false);
+    expect(esEstadoGuardado({ ...valido, recientes: [1, 2] })).toBe(false);
+    expect(esEstadoGuardado({ ...valido, prestamos: [{ isbn: 1 }] })).toBe(false);
   });
 });
