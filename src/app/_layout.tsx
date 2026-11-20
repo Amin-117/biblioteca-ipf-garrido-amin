@@ -1,5 +1,7 @@
 import { Stack, ThemeProvider } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 
 import { BibliotecaProvider, useEstadoBiblioteca } from '../context/BibliotecaContext';
 import { useTemaNavegacion } from '../hooks/useTemaNavegacion';
@@ -11,9 +13,22 @@ export const unstable_settings = {
   anchor: '(tabs)',
 };
 
+// El splash queda visible hasta recuperar los datos guardados: la app no aparece "vacía".
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
   const biblioteca = useEstadoBiblioteca();
   const temaNavegacion = useTemaNavegacion();
+
+  useEffect(() => {
+    if (biblioteca.hidratado) {
+      SplashScreen.hideAsync();
+    }
+  }, [biblioteca.hidratado]);
+
+  if (!biblioteca.hidratado) {
+    return null;
+  }
 
   return (
     <BibliotecaProvider valor={biblioteca}>

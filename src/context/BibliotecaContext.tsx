@@ -1,7 +1,7 @@
 import { addNotificationReceivedListener } from 'expo-notifications';
 import { createContext, type ReactNode, use, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { CREDENCIALES_PERSONAL, USUARIO_ACTUAL } from '../constants/biblioteca';
+import { CREDENCIALES_PERSONAL, DEMORA_GUARDADO_MS, USUARIO_ACTUAL } from '../constants/biblioteca';
 import { ESPERA_INICIAL } from '../data/esperaInicial';
 import { Cola } from '../estructuras/Cola';
 import { Pila } from '../estructuras/Pila';
@@ -13,6 +13,7 @@ import {
   notificarRetiroDisponible,
   programarRecordatorio,
 } from '../lib/notificaciones';
+import { cargarEstado, guardarEstado } from '../lib/persistencia';
 import { calcularDisponibles, crearPrestamo } from '../lib/prestamos';
 import type {
   Aviso,
@@ -47,6 +48,68 @@ export function useEstadoBiblioteca(): BibliotecaContextValor {
   const [recientes, setRecientes] = useState(() => new Pila<string>());
   const [avisos, setAvisos] = useState<Aviso[]>([]);
   const [sesionIniciada, setSesionIniciada] = useState(false);
+  const [hidratado, setHidratado] = useState(false);
+
+  // Al iniciar se recupera lo guardado (el splash sigue visible hasta que termina).
+  useEffect(() => {
+    let activo = true;
+
+    async function hidratar() {
+      const guardado = await cargarEstado();
+      let programados: Set<string> | null = null;
+      try {
+        programados = await idsProgramados();
+      } catch {
+        programados = null;
+      }
+      if (!activo) {
+        return;
+      }
+      if (guardado) {
+        // Un recordatorio que ya llegó (o se perdió) mientras la app estaba cerrada no sigue activo.
+        setPrestamos(
+          guardado.prestamos.map((prestamo) =>
+            programados && prestamo.recordatorioId && !programados.has(prestamo.recordatorioId)
+              ? { ...prestamo, recordatorioId: null }
+              : prestamo,
+          ),
+        );
+        setListasEspera(
+          Object.fromEntries(
+            Object.entries(guardado.listasEspera).map(([isbn, nombres]) => [isbn, Cola.desde(nombres)]),
+          ),
+        );
+        setRecientes(Pila.desde(guardado.recientes));
+        setAvisos(guardado.avisos);
+      }
+      setHidratado(true);
+    }
+
+    hidratar();
+
+    return () => {
+      activo = false;
+    };
+  }, []);
+
+  // Guardado con demora: varios cambios seguidos se escriben una sola vez.
+  // shortcut: si la app se mata dentro de DEMORA_GUARDADO_MS se pierde el último cambio; guardar también al pasar a segundo plano si hiciera falta.
+  useEffect(() => {
+    if (!hidratado) {
+      return;
+    }
+    const temporizador = setTimeout(() => {
+      guardarEstado({
+        prestamos,
+        listasEspera: Object.fromEntries(
+          Object.entries(listasEspera).map(([isbn, cola]) => [isbn, cola.aArray()]),
+        ),
+        recientes: recientes.aArray(),
+        avisos,
+      }).catch(() => undefined);
+    }, DEMORA_GUARDADO_MS);
+    return () => clearTimeout(temporizador);
+  }, [hidratado, prestamos, listasEspera, recientes, avisos]);
 
   const prestamoActivo = useCallback(
     (isbn: string) => prestamos.find((prestamo) => esActivoDe(prestamo, isbn)),
@@ -243,6 +306,7 @@ export function useEstadoBiblioteca(): BibliotecaContextValor {
       listasEspera,
       recientes,
       sesionIniciada,
+      hidratado,
       avisos,
       registrarVisto,
       reservar,
@@ -265,6 +329,7 @@ export function useEstadoBiblioteca(): BibliotecaContextValor {
       listasEspera,
       recientes,
       sesionIniciada,
+      hidratado,
       avisos,
       registrarVisto,
       reservar,

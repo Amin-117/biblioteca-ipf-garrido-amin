@@ -41,12 +41,21 @@ export type ResultadoEntrega =
   | { tipo: 'sin-espera' }
   | { tipo: 'entregado'; persona: string; aVos: boolean };
 
+// Lo que se persiste: Pila y Cola se guardan con aArray() y se reconstruyen con desde().
+export type EstadoGuardado = {
+  prestamos: Prestamo[];
+  listasEspera: Record<string, string[]>;
+  recientes: string[];
+  avisos: Aviso[];
+};
+
 export type BibliotecaContextValor = {
   prestamos: Prestamo[];
   // Instancias de solo lectura para la UI: el Provider nunca las muta, crea copias nuevas.
   listasEspera: Readonly<Record<string, Cola<string>>>;
   recientes: Pila<string>; // ISBN vistos, de base a tope
   sesionIniciada: boolean;
+  hidratado: boolean; // false mientras se recupera lo guardado
   avisos: Aviso[];
   registrarVisto: (isbn: string) => void;
   reservar: (isbn: string) => ResultadoReserva;
