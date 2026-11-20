@@ -92,3 +92,5 @@ export const TAMANIO_TACTIL_MINIMO = 44;
 export const opacidades = {
   presionado: 0.75,
 } as const;
+
+export const ANCHO_TARJETA_RECIENTE = 168;
