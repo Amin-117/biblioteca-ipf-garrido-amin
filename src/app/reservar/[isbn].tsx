@@ -9,6 +9,7 @@ import { DIAS_PRESTAMO } from '../../constants/biblioteca';
 import { useBiblioteca } from '../../context/BibliotecaContext';
 import { buscarLibroPorIsbn } from '../../lib/catalogo';
 import { formatearFecha, sumarDias } from '../../lib/fechas';
+import { volver } from '../../lib/navegacion';
 import { esIsbnValido, normalizarParametro } from '../../lib/validaciones';
 
 export default function Reservar() {
@@ -20,7 +21,6 @@ export default function Reservar() {
   const [rechazo, setRechazo] = useState<string | null>(null);
   const [confirmada, setConfirmada] = useState(false);
 
-  const volver = () => router.back();
   const salida = <BotonPrimario texto="Volver" variante="secundario" onPress={volver} />;
 
   if (!esIsbnValido(codigo)) {

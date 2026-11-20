@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -7,6 +6,7 @@ import { CampoTexto } from '../components/CampoTexto';
 import { espaciado, tipografia, type Colores } from '../constants/tema';
 import { useBiblioteca } from '../context/BibliotecaContext';
 import { useTema } from '../hooks/useTema';
+import { volver } from '../lib/navegacion';
 
 export default function Login() {
   const { iniciarSesion } = useBiblioteca();
@@ -61,7 +61,7 @@ export default function Login() {
         </Text>
       ) : null}
       <BotonPrimario texto="Ingresar" onPress={ingresar} deshabilitado={faltanDatos} />
-      <BotonPrimario texto="Cancelar" variante="secundario" onPress={() => router.back()} />
+      <BotonPrimario texto="Cancelar" variante="secundario" onPress={volver} />
     </View>
   );
 }
