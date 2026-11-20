@@ -4,7 +4,6 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 
 import {
   espaciado,
-  opacidades,
   pesos,
   TAMANIO_TACTIL_MINIMO,
   tipografia,
@@ -24,7 +23,7 @@ export function BotonPersonal() {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={sesionIniciada ? 'Personal: ir al mostrador' : 'Personal: ingresar'}
-        style={({ pressed }) => [estilos.boton, pressed && estilos.presionado]}>
+        style={estilos.boton}>
         <Text style={estilos.texto}>Personal</Text>
       </Pressable>
     </Link>
@@ -38,9 +37,6 @@ function crearEstilos(c: Colores) {
       minWidth: TAMANIO_TACTIL_MINIMO,
       paddingHorizontal: espaciado.sm,
       justifyContent: 'center',
-    },
-    presionado: {
-      opacity: opacidades.presionado,
     },
     texto: {
       color: c.primario,

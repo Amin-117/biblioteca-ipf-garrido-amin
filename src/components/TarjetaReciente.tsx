@@ -7,7 +7,6 @@ import {
   bordes,
   espaciado,
   fuentes,
-  opacidades,
   pesos,
   radios,
   TAMANIO_TACTIL_MINIMO,
@@ -30,7 +29,7 @@ export function TarjetaReciente({ libro }: Props) {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`${libro.titulo}, de ${libro.autor}`}
-        style={({ pressed }) => [estilos.tarjeta, pressed && estilos.presionada]}>
+        style={estilos.tarjeta}>
         <Text style={estilos.titulo} numberOfLines={2}>
           {libro.titulo}
         </Text>
@@ -55,9 +54,6 @@ function crearEstilos(c: Colores) {
       borderLeftWidth: bordes.marcado,
       borderLeftColor: c.primario,
       backgroundColor: c.superficie,
-    },
-    presionada: {
-      opacity: opacidades.presionado,
     },
     titulo: {
       color: c.texto,

@@ -5,7 +5,6 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 
 import {
   espaciado,
-  opacidades,
   pesos,
   radios,
   TAMANIO_TACTIL_MINIMO,
@@ -29,7 +28,7 @@ export function AccesoRapido({ href, texto, icono }: Props) {
     <Link href={href} asChild>
       <Pressable
         accessibilityRole="button"
-        style={({ pressed }) => [estilos.acceso, pressed && estilos.presionado]}>
+        style={estilos.acceso}>
         <Ionicons name={icono} size={tamaniosIcono.mediano} color={c.sobrePrimario} />
         <Text style={estilos.texto}>{texto}</Text>
       </Pressable>
@@ -49,9 +48,6 @@ function crearEstilos(c: Colores) {
       paddingVertical: espaciado.md,
       borderRadius: radios.md,
       backgroundColor: c.primario,
-    },
-    presionado: {
-      opacity: opacidades.presionado,
     },
     texto: {
       color: c.sobrePrimario,

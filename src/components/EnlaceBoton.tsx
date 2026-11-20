@@ -5,7 +5,6 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import {
   bordes,
   espaciado,
-  opacidades,
   pesos,
   radios,
   TAMANIO_TACTIL_MINIMO,
@@ -21,6 +20,7 @@ type Props = {
 };
 
 // <Link> con aspecto de botón secundario: para salidas como "Ir al Catálogo".
+// Bajo <Link asChild> el style tiene que ser estático: la forma de función ({ pressed }) se pierde.
 export function EnlaceBoton({ href, texto, replace = false }: Props) {
   const c = useTema();
   const estilos = useMemo(() => crearEstilos(c), [c]);
@@ -29,7 +29,7 @@ export function EnlaceBoton({ href, texto, replace = false }: Props) {
     <Link href={href} replace={replace} asChild>
       <Pressable
         accessibilityRole="link"
-        style={({ pressed }) => [estilos.enlace, pressed && estilos.presionado]}>
+        style={estilos.enlace}>
         <Text style={estilos.texto}>{texto}</Text>
       </Pressable>
     </Link>
@@ -48,9 +48,6 @@ function crearEstilos(c: Colores) {
       backgroundColor: c.superficie,
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    presionado: {
-      opacity: opacidades.presionado,
     },
     texto: {
       color: c.primario,

@@ -7,7 +7,6 @@ import {
   bordes,
   espaciado,
   fuentes,
-  opacidades,
   pesos,
   TAMANIO_TACTIL_MINIMO,
   tamaniosIcono,
@@ -30,7 +29,7 @@ export function FilaLibro({ libro }: Props) {
       <Pressable
         accessibilityRole="button"
         accessibilityHint="Abre la ficha del libro"
-        style={({ pressed }) => [estilos.fila, pressed && estilos.presionada]}>
+        style={estilos.fila}>
         <View style={estilos.textos}>
           <Text style={estilos.titulo}>{libro.titulo}</Text>
           <Text style={estilos.autor}>
@@ -55,9 +54,6 @@ function crearEstilos(c: Colores) {
       backgroundColor: c.superficie,
       borderBottomWidth: bordes.fino,
       borderBottomColor: c.borde,
-    },
-    presionada: {
-      opacity: opacidades.presionado,
     },
     textos: {
       flex: 1,
