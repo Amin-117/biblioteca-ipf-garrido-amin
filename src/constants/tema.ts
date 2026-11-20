@@ -88,3 +88,7 @@ export const bordes = {
 export const ALTURA_CAMARA = 300;
 
 export const TAMANIO_TACTIL_MINIMO = 44;
+
+export const opacidades = {
+  presionado: 0.75,
+} as const;
