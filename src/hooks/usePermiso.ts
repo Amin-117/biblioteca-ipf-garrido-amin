@@ -4,7 +4,7 @@ import {
   type NotificationPermissionsStatus,
   requestPermissionsAsync,
 } from 'expo-notifications';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, Linking } from 'react-native';
 
 import { crearCanalPrestamos } from '../lib/notificaciones';
@@ -29,6 +29,21 @@ export function usePermiso(recurso: Recurso): ControlPermiso {
   // El hook de expo-camera se llama siempre (reglas de los hooks); solo consulta si es la cámara.
   const [permisoCamara, pedirCamara, consultarCamara] = useCameraPermissions({ get: esCamara });
   const [permisoNotificaciones, setPermisoNotificaciones] = useState<RespuestaPermiso | null>(null);
+  // actualizar() y pedir() se llaman desde handlers y foco: si la pantalla ya se desmontó, no se guarda nada.
+  const montado = useRef(true);
+
+  useEffect(() => {
+    montado.current = true;
+    return () => {
+      montado.current = false;
+    };
+  }, []);
+
+  const guardarNotificaciones = useCallback((respuesta: RespuestaPermiso) => {
+    if (montado.current) {
+      setPermisoNotificaciones(respuesta);
+    }
+  }, []);
 
   const estado = mapearPermiso(esCamara ? permisoCamara : permisoNotificaciones);
 
@@ -38,13 +53,13 @@ export function usePermiso(recurso: Recurso): ControlPermiso {
         return mapearPermiso(await consultarCamara());
       }
       const respuesta = await getPermissionsAsync();
-      setPermisoNotificaciones(respuesta);
+      guardarNotificaciones(respuesta);
       return mapearPermiso(respuesta);
     } catch {
-      setPermisoNotificaciones(SIN_SOPORTE);
+      guardarNotificaciones(SIN_SOPORTE);
       return mapearPermiso(SIN_SOPORTE);
     }
-  }, [esCamara, consultarCamara]);
+  }, [esCamara, consultarCamara, guardarNotificaciones]);
 
   const pedir = useCallback(async (): Promise<EstadoPermiso> => {
     try {
@@ -54,13 +69,13 @@ export function usePermiso(recurso: Recurso): ControlPermiso {
       // Android 13+: el canal se crea antes de pedir el permiso.
       await crearCanalPrestamos();
       const respuesta = await requestPermissionsAsync();
-      setPermisoNotificaciones(respuesta);
+      guardarNotificaciones(respuesta);
       return mapearPermiso(respuesta);
     } catch {
-      setPermisoNotificaciones(SIN_SOPORTE);
+      guardarNotificaciones(SIN_SOPORTE);
       return mapearPermiso(SIN_SOPORTE);
     }
-  }, [esCamara, pedirCamara]);
+  }, [esCamara, pedirCamara, guardarNotificaciones]);
 
   const abrirAjustes = useCallback(() => Linking.openSettings(), []);
 

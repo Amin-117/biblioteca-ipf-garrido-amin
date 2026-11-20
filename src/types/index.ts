@@ -53,6 +53,7 @@ export type BibliotecaContextValor = {
   devolver: (isbn: string) => Promise<void>;
   activarRecordatorio: (isbn: string) => Promise<void>;
   desactivarRecordatorio: (isbn: string) => Promise<void>;
+  sincronizarRecordatorios: () => Promise<void>;
   entregarAlSiguiente: (isbn: string) => Promise<ResultadoEntrega>;
   iniciarSesion: (usuario: string, clave: string) => boolean;
   cerrarSesion: () => void;

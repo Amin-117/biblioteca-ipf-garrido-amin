@@ -1,4 +1,5 @@
-import { createContext, type ReactNode, use, useCallback, useMemo, useState } from 'react';
+import { addNotificationReceivedListener } from 'expo-notifications';
+import { createContext, type ReactNode, use, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CREDENCIALES_PERSONAL, USUARIO_ACTUAL } from '../constants/biblioteca';
 import { ESPERA_INICIAL } from '../data/esperaInicial';
@@ -7,6 +8,7 @@ import { Pila } from '../estructuras/Pila';
 import { buscarLibroPorIsbn, tituloDe } from '../lib/catalogo';
 import {
   cancelarRecordatorio,
+  idsProgramados,
   notificacionesConcedidas,
   notificarRetiroDisponible,
   programarRecordatorio,
@@ -120,6 +122,34 @@ export function useEstadoBiblioteca(): BibliotecaContextValor {
     );
   }, []);
 
+  // Un recordatorio que ya llegó deja de estar programado: su id vuelve a null y el interruptor se apaga.
+  const sincronizarRecordatorios = useCallback(async () => {
+    let programados: Set<string>;
+    try {
+      programados = await idsProgramados();
+    } catch {
+      return;
+    }
+    setPrestamos((anteriores) =>
+      anteriores.some((p) => p.recordatorioId !== null && !programados.has(p.recordatorioId))
+        ? anteriores.map((p) =>
+            p.recordatorioId !== null && !programados.has(p.recordatorioId)
+              ? { ...p, recordatorioId: null }
+              : p,
+          )
+        : anteriores,
+    );
+  }, []);
+
+  useEffect(() => {
+    const suscripcion = addNotificationReceivedListener(() => {
+      sincronizarRecordatorios();
+    });
+    return () => {
+      suscripcion.remove();
+    };
+  }, [sincronizarRecordatorios]);
+
   const activarRecordatorio = useCallback(
     async (isbn: string) => {
       const prestamo = prestamoActivo(isbn);
@@ -219,6 +249,7 @@ export function useEstadoBiblioteca(): BibliotecaContextValor {
       devolver,
       activarRecordatorio,
       desactivarRecordatorio,
+      sincronizarRecordatorios,
       entregarAlSiguiente,
       iniciarSesion,
       cerrarSesion,
@@ -240,6 +271,7 @@ export function useEstadoBiblioteca(): BibliotecaContextValor {
       devolver,
       activarRecordatorio,
       desactivarRecordatorio,
+      sincronizarRecordatorios,
       entregarAlSiguiente,
       iniciarSesion,
       cerrarSesion,
