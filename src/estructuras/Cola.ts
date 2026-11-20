@@ -1,4 +1,4 @@
-// Cola FIFO genérica sin shift(): un mapa indexado y dos índices hacen que desencolar sea O(1).
+// Cola FIFO genérica sin Array.prototype.shift: un mapa indexado y dos índices hacen que desencolar sea O(1).
 // Las instancias guardadas en estado de React no se mutan: se trabaja sobre clonar() o Cola.desde().
 export class Cola<T> {
   #items = new Map<number, T>();
