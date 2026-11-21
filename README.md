@@ -239,9 +239,9 @@ Tomadas en un teléfono Android real con Expo Go (SDK 58). Están en [docs/captu
 
 ### Detalle
 
-| Libro | Cargando | Error al cargar |
-| --- | --- | --- |
-| <img src="docs/capturas/detalle-libro.jpg" width="200" alt="Libro"> | <img src="docs/capturas/detalle-cargando.jpg" width="200" alt="Cargando"> | <img src="docs/capturas/detalle-error-carga.jpg" width="200" alt="Error al cargar"> |
+| Libro | Cargando | Error al cargar | Inexistente |
+| --- | --- | --- | --- |
+| <img src="docs/capturas/detalle-libro.jpg" width="200" alt="Libro"> | <img src="docs/capturas/detalle-cargando.jpg" width="200" alt="Cargando"> | <img src="docs/capturas/detalle-error-carga.jpg" width="200" alt="Error al cargar"> | <img src="docs/capturas/detalle-inexistente.jpg" width="200" alt="Inexistente"> |
 
 ### Buscador
 
@@ -286,7 +286,6 @@ En Expo Go el diálogo del sistema muestra el texto de Expo Go, no el texto de p
 ### Pendientes
 
 - Catálogo cargando
-- Detalle inexistente (`/libro/abc` o un ISBN que no existe)
 - Escáner: cargando
 - Mostrador antes y después de "Entregar al siguiente"
 - (Opcional) Diálogo de cámara en development build
