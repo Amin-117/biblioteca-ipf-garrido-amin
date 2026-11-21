@@ -229,26 +229,67 @@ Los tests están en [src/estructuras/\_\_tests\_\_](src/estructuras/__tests__) (
 
 ## Capturas
 
-Pendientes de sacar en el teléfono (Expo Go). Rutas previstas:
+Tomadas en un teléfono Android real con Expo Go (SDK 58). Están en [docs/capturas](docs/capturas).
 
-| Captura | Archivo |
+### Catálogo
+
+| Con datos | Con error |
 | --- | --- |
-| Catálogo cargando | `docs/capturas/catalogo-cargando.png` |
-| Catálogo con error | `docs/capturas/catalogo-error.png` |
-| Catálogo con datos | `docs/capturas/catalogo-datos.png` |
-| Buscador (`borges`) | `docs/capturas/buscador.png` |
-| Detalle inexistente | `docs/capturas/detalle-inexistente.png` |
-| Reserva con ejemplares | `docs/capturas/reserva-con-ejemplares.png` |
-| Reserva sin ejemplares | `docs/capturas/reserva-sin-ejemplares.png` |
-| Escáner: cargando | `docs/capturas/escaner-cargando.png` |
-| Escáner: preguntable | `docs/capturas/escaner-preguntable.png` |
-| Escáner: bloqueado | `docs/capturas/escaner-bloqueado.png` |
-| Escáner: concedido | `docs/capturas/escaner-concedido.png` |
-| Notificación recibida | `docs/capturas/notificacion.png` |
-| Mostrador antes de "Entregar al siguiente" | `docs/capturas/mostrador-antes.png` |
-| Mostrador después | `docs/capturas/mostrador-despues.png` |
-| Pantalla 404 | `docs/capturas/404.png` |
-| (Opcional) Diálogo de cámara en development build | `docs/capturas/dialogo-camara-dev-build.png` |
+| <img src="docs/capturas/catalogo-datos.jpg" width="200" alt="Con datos"> | <img src="docs/capturas/catalogo-error.jpg" width="200" alt="Con error"> |
+
+### Detalle
+
+| Libro | Cargando | Error al cargar |
+| --- | --- | --- |
+| <img src="docs/capturas/detalle-libro.jpg" width="200" alt="Libro"> | <img src="docs/capturas/detalle-cargando.jpg" width="200" alt="Cargando"> | <img src="docs/capturas/detalle-error-carga.jpg" width="200" alt="Error al cargar"> |
+
+### Buscador
+
+| Resultados (`borges`) | Buscando | Sin resultados |
+| --- | --- | --- |
+| <img src="docs/capturas/buscador.jpg" width="200" alt="Resultados (`borges`)"> | <img src="docs/capturas/buscador-cargando.jpg" width="200" alt="Buscando"> | <img src="docs/capturas/buscador-sin-resultados.jpg" width="200" alt="Sin resultados"> |
+
+### Reservas
+
+| Con ejemplares (préstamo) | Sin ejemplares (lista de espera) |
+| --- | --- |
+| <img src="docs/capturas/reserva-con-ejemplares.jpg" width="200" alt="Con ejemplares (préstamo)"> | <img src="docs/capturas/reserva-sin-ejemplares.jpg" width="200" alt="Sin ejemplares (lista de espera)"> |
+
+| Mis reservas: préstamo | Préstamo y espera | Notificaciones activadas |
+| --- | --- | --- |
+| <img src="docs/capturas/reservas-prestamo.jpg" width="200" alt="Mis reservas: préstamo"> | <img src="docs/capturas/reservas-prestamo-y-espera.jpg" width="200" alt="Préstamo y espera"> | <img src="docs/capturas/reservas-notificaciones-activadas.jpg" width="200" alt="Notificaciones activadas"> |
+
+### Escáner (permiso de cámara)
+
+| Preguntable | Pantalla previa | Diálogo del sistema (Expo Go) |
+| --- | --- | --- |
+| <img src="docs/capturas/escaner-preguntable.jpg" width="200" alt="Preguntable"> | <img src="docs/capturas/permiso-camara-previa.jpg" width="200" alt="Pantalla previa"> | <img src="docs/capturas/dialogo-camara-expo-go.jpg" width="200" alt="Diálogo del sistema (Expo Go)"> |
+
+| Concedido | Bloqueado |
+| --- | --- |
+| <img src="docs/capturas/escaner-concedido.jpg" width="200" alt="Concedido"> | <img src="docs/capturas/escaner-bloqueado.jpg" width="200" alt="Bloqueado"> |
+
+### Notificaciones
+
+| Pantalla previa | Diálogo de Expo Go | Notificación recibida | En la pantalla de bloqueo |
+| --- | --- | --- | --- |
+| <img src="docs/capturas/permiso-notificaciones-previa.jpg" width="200" alt="Pantalla previa"> | <img src="docs/capturas/dialogo-notificaciones-expo-go.jpg" width="200" alt="Diálogo de Expo Go"> | <img src="docs/capturas/notificacion.jpg" width="200" alt="Notificación recibida"> | <img src="docs/capturas/notificacion-pantalla-bloqueo.jpg" width="200" alt="En la pantalla de bloqueo"> |
+
+En Expo Go el diálogo del sistema muestra el texto de Expo Go, no el texto de propósito de `app.json` (ver la sección "Development build").
+
+### Otras
+
+| Pantalla 404 (`/calquiercosa`) |
+| --- |
+| <img src="docs/capturas/404.jpg" width="200" alt="Pantalla 404 (`/calquiercosa`)"> |
+
+### Pendientes
+
+- Catálogo cargando
+- Detalle inexistente (`/libro/abc` o un ISBN que no existe)
+- Escáner: cargando
+- Mostrador antes y después de "Entregar al siguiente"
+- (Opcional) Diálogo de cámara en development build
 
 ## Development build (opcional)
 
