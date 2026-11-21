@@ -26,19 +26,28 @@ setNotificationHandler({
 });
 
 // En Android 13+ el canal tiene que existir antes de pedir el permiso.
-export async function crearCanalPrestamos(): Promise<void> {
+// Devuelve si se pudo crear: en algunos entornos (por ejemplo, ciertas versiones de Expo Go)
+// la llamada nativa falla, y eso no puede impedir pedir el permiso ni avisar a la persona.
+export async function crearCanalPrestamos(): Promise<boolean> {
   if (Platform.OS !== 'android') {
-    return;
+    return false;
   }
-  await setNotificationChannelAsync(CANAL_PRESTAMOS, {
-    name: 'Préstamos',
-    description: 'Recordatorios de devolución y libros listos para retirar',
-    importance: AndroidImportance.HIGH,
-  });
+  try {
+    await setNotificationChannelAsync(CANAL_PRESTAMOS, {
+      name: 'Préstamos',
+      importance: AndroidImportance.HIGH,
+    });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 // Modo demostración: llega a los SEGUNDOS_RECORDATORIO_DEMO segundos. Devuelve el identificador.
+// El canal se asegura también acá (el permiso pudo darse desde Ajustes, sin pasar por pedir()).
+// Si no se pudo crear, la notificación va al canal por defecto en lugar de perderse.
 export async function programarRecordatorio(titulo: string, fechaDevolucionIso: string): Promise<string> {
+  const hayCanal = await crearCanalPrestamos();
   return scheduleNotificationAsync({
     content: {
       title: 'Recordatorio de devolución',
@@ -47,7 +56,7 @@ export async function programarRecordatorio(titulo: string, fechaDevolucionIso: 
     trigger: {
       type: SchedulableTriggerInputTypes.TIME_INTERVAL,
       seconds: SEGUNDOS_RECORDATORIO_DEMO,
-      channelId: CANAL_PRESTAMOS,
+      ...(hayCanal ? { channelId: CANAL_PRESTAMOS } : {}),
     },
   });
 }
